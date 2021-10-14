@@ -58,22 +58,6 @@ public class Applicant {
         this.application = application;
     }
 
-    public Name getName() {
-        return name;
-    }
-
-    public Phone getPhone() {
-        return phone;
-    }
-
-    public Email getEmail() {
-        return email;
-    }
-
-    public Address getAddress() {
-        return address;
-    }
-
     /**
      * Returns true if both applicants have the same name.
      * This defines a weaker notion of equality between two applicants.

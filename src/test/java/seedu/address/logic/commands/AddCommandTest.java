@@ -109,7 +109,7 @@ public class AddCommandTest {
         public Path getApplicantBookFilePath() {
             throw new AssertionError("This method should not be called.");
         }
-      
+
         @Override
         public Path getPositionBookFilePath() {
             throw new AssertionError("This method should not be called.");
