@@ -70,28 +70,26 @@ Shows a message explaining how to access the help page.
 
 Format: `help`
 
-### Adding a position: `add position`
+### Adding a position: `add-position`
 
-Adds a position to the application management system.
+Adds a position to MrTechRecruiter.
 
-Format: `add position t/TITLE desc/DESCRIPTION`
-
-Examples:
-* `add position t/software engineer desc/work in a team that builds a facial recognition application`
-
-
-### Deleting a position: `delete position`
-
-Deletes the specified position from the application management system.
-
-Format: `delete position t/TITLE`
-
-* Deletes the position with the specified `POSITION`.
-* The name refers to the name of the position as displayed in the position list.
-* The name must match exactly.
+Format: `add-position tit/TITLE des/DESCRIPTION`
 
 Examples:
-* `delete position t/software engineer` deletes the position with the exact name `software engineer`.
+* `add-position tit/software engineer des/work in a team that builds a facial recognition application`
+
+
+### Deleting a position: `delete-position`
+
+Deletes the specified position from MrTechRecruiter.
+
+Format: `delete-position INDEX`
+
+* Deletes the position with the specified `INDEX`.
+
+Examples:
+* `delete-position 1` deletes the position with index 1.
 
 
 ### Adding an applicant: `add-applicant`
@@ -113,14 +111,12 @@ Examples:
 
 Deletes the specified applicant from MrTechRecruiter.
 
-Format: `delete-applicant n/NAME`
+Format: `delete-applicant INDEX`
 
-* Deletes the applicant with the specified `NAME`.
-* The name refers to the name of the applicant as shown in the displayed person list.
-* The name must match exactly.
+* Deletes the applicant with the specified `INDEX`.
 
 Examples:
-* `delete-applicant n/John Doe` deletes the applicant with the exact name John Doe.
+* `delete-applicant 1` deletes the applicant with index 1.
 
 
 ### Listing all positions : `list position` [coming soon]

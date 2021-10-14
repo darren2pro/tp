@@ -36,7 +36,7 @@ public class DeleteApplicantCommand extends Command {
         List<Applicant> lastShownList = model.getFilteredApplicantList();
 
         if (targetIndex.getZeroBased() >= lastShownList.size()) {
-            throw new CommandException(Messages.MESSAGE_APPLICANTS_LISTED_OVERVIEW);
+            throw new CommandException(Messages.MESSAGE_INVALID_APPLICANT_DISPLAYED_INDEX);
         }
 
         Applicant applicantToDelete = lastShownList.get(targetIndex.getZeroBased());
