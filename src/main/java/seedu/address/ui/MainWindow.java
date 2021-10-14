@@ -144,7 +144,7 @@ public class MainWindow extends UiPart<Stage> {
         CommandBox commandBox = new CommandBox(this::executeCommand);
         commandBoxPlaceholder.getChildren().add(commandBox.getRoot());
     }
-
+      
     /**
      * Fills up all the placeholders of this window.
      */
@@ -154,7 +154,7 @@ public class MainWindow extends UiPart<Stage> {
 
         resultDisplay = new ResultDisplay();
         resultDisplayPlaceholder.getChildren().add(resultDisplay.getRoot());
-
+      
         StatusBarFooter statusBarFooter = new StatusBarFooter(logic.getPositionBookFilePath());
         statusbarPlaceholder.getChildren().add(statusBarFooter.getRoot());
 
