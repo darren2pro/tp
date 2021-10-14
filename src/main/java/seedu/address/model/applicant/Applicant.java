@@ -89,7 +89,8 @@ public class Applicant {
         return name.equals(otherApplicant.name)
                 && phone.equals(otherApplicant.phone)
                 && email.equals(otherApplicant.email)
-                && address.equals(otherApplicant.address);
+                && address.equals(otherApplicant.address)
+                && application.equals(otherApplicant.application);
     }
 
     @Override
