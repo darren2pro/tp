@@ -135,6 +135,11 @@ public class AddPositionCommandTest {
         }
 
         @Override
+        public Applicant getApplicantByNameIgnoreCase(Name applicantName) {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
         public void addApplicant(Applicant applicant) {
             throw new AssertionError("This method should not be called.");
         }

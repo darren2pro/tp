@@ -47,7 +47,19 @@ public class UniqueApplicantList implements Iterable<Applicant> {
      */
     public boolean containsApplicantWithName(Name toCheck) {
         requireNonNull(toCheck);
-        return internalList.stream().anyMatch(applicant -> applicant.getName().equals(toCheck));
+        return internalList.stream().anyMatch(applicant -> applicant.hasName(toCheck));
+    }
+
+    /**
+     * Returns the applicant in the list with the specified name, if any.
+     * @throws ApplicantNotFoundException if not found.
+     */
+    public Applicant getApplicantByNameIgnoreCase(Name name) {
+        requireNonNull(name);
+        return internalList.stream()
+                .filter(applicant -> applicant.hasNameIgnoreCase(name))
+                .findFirst()
+                .orElseThrow(ApplicantNotFoundException::new);
     }
 
     /**
@@ -194,4 +206,5 @@ public class UniqueApplicantList implements Iterable<Applicant> {
 
         return copiedApplicants;
     }
+
 }

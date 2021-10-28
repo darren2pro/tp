@@ -40,6 +40,7 @@ public class ApplicantBook implements ReadOnlyApplicantBook {
     }
 
     //// list overwrite operations
+
     /**
      * Replaces the contents of the applicant list with {@code applicants}.
      * {@code applicants} must not contain duplicate applicants.
@@ -72,6 +73,14 @@ public class ApplicantBook implements ReadOnlyApplicantBook {
     public boolean hasApplicantWithName(Name applicantName) {
         requireNonNull(applicantName);
         return applicants.containsApplicantWithName(applicantName);
+    }
+
+    /**
+     * Returns the applicant with the specified name, if any.
+     */
+    public Applicant getApplicantByNameIgnoreCase(Name applicantName) {
+        requireNonNull(applicantName);
+        return applicants.getApplicantByNameIgnoreCase(applicantName);
     }
 
     /**

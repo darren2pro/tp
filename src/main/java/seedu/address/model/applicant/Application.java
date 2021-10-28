@@ -7,6 +7,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import seedu.address.commons.util.StringUtil;
 import seedu.address.model.position.Position;
 import seedu.address.model.position.Title;
 
@@ -83,10 +84,10 @@ public class Application {
 
     @Override
     public String toString() {
-        return "Application: {"
-                + ", Position: " + position.getTitle()
+        return "{ "
+                + "Position: " + position.getTitle()
                 + ", Status: " + status
-                + "}";
+                + " }";
     }
 
     public Application getCopiedApplication() {
@@ -117,5 +118,11 @@ public class Application {
             return valueOf(inputString.toUpperCase());
         }
 
+        @Override
+        public String toString() {
+            return StringUtil.toProperCase(super.toString());
+        }
+
     }
+
 }

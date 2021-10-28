@@ -8,8 +8,6 @@ import static seedu.address.logic.parser.CliSyntax.PREFIX_NAME;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_PHONE;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_POSITION;
 
-import java.util.stream.Stream;
-
 import seedu.address.commons.core.index.Index;
 import seedu.address.logic.commands.EditApplicantCommand;
 import seedu.address.logic.descriptors.EditApplicantDescriptor;
@@ -69,11 +67,4 @@ public class EditApplicantCommandParser implements Parser<EditApplicantCommand> 
 
     }
 
-    /**
-     * Returns true if none of the prefixes contains empty {@code Optional} values in the given
-     * {@code ArgumentMultimap}.
-     */
-    private static boolean arePrefixesPresent(ArgumentMultimap argumentMultimap, Prefix... prefixes) {
-        return Stream.of(prefixes).allMatch(prefix -> argumentMultimap.getValue(prefix).isPresent());
-    }
 }

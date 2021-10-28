@@ -237,29 +237,13 @@ public class ModelManager implements Model {
     }
 
     @Override
-    public Applicant addApplicantWithParticulars(ApplicantParticulars applicantParticulars) {
-        Title positionTitle = applicantParticulars.getPositionTitle();
-        Position position = positionBook.getPositionByTitle(positionTitle);
-        Applicant applicant = new Applicant(applicantParticulars, position);
-
-        applicantBook.addApplicant(applicant);
-        updateFilteredApplicantList(PREDICATE_SHOW_ALL_APPLICANTS);
-        return applicant;
-    }
-
-    @Override
-    public boolean hasApplicantWithName(Name applicantName) {
-        requireNonNull(applicantName);
-        return applicantBook.hasApplicantWithName(applicantName);
-    }
-
-    @Override
     public void setPerson(Person target, Person editedPerson) {
         requireAllNonNull(target, editedPerson);
         addressBook.setPerson(target, editedPerson);
     }
 
     //=========== Filtered Person List Accessors =============================================================
+
     /**
      * Returns an unmodifiable view of the list of {@code Person} backed by the internal list of
      * {@code versionedAddressBook}
@@ -275,7 +259,7 @@ public class ModelManager implements Model {
         filteredPersons.setPredicate(predicate);
     }
 
-    // needs to update
+    // TODO: Update equals()
     @Override
     public boolean equals(Object obj) {
         // short circuit if same object
@@ -307,8 +291,6 @@ public class ModelManager implements Model {
     public Path getPositionBookFilePath() {
         return userPrefs.getPositionBookFilePath();
     }
-
-    // Position related methods
 
     @Override
     public boolean hasPosition(Position position) {
@@ -359,8 +341,13 @@ public class ModelManager implements Model {
         filteredPositions.setPredicate(predicate);
     }
 
-
     //=========== Applicant and ApplicantBook =============================================================
+
+    @Override
+    public Path getApplicantBookFilePath() {
+        return userPrefs.getApplicantBookFilePath();
+    }
+
     public void setApplicantBook(ReadOnlyApplicantBook applicantBook) {
         this.applicantBook.resetData(applicantBook);
     }
@@ -377,12 +364,6 @@ public class ModelManager implements Model {
     }
 
     @Override
-    public boolean hasApplicant(Applicant applicant) {
-        requireNonNull(applicant);
-        return applicantBook.hasApplicant(applicant);
-    }
-
-    @Override
     public void addApplicant(Applicant applicant) {
         applicantBook.addApplicant(applicant);
         updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
@@ -394,8 +375,32 @@ public class ModelManager implements Model {
     }
 
     @Override
-    public Path getApplicantBookFilePath() {
-        return userPrefs.getApplicantBookFilePath();
+    public Applicant addApplicantWithParticulars(ApplicantParticulars applicantParticulars) {
+        Title positionTitle = applicantParticulars.getPositionTitle();
+        Position position = positionBook.getPositionByTitle(positionTitle);
+        Applicant applicant = new Applicant(applicantParticulars, position);
+
+        applicantBook.addApplicant(applicant);
+        updateFilteredApplicantList(PREDICATE_SHOW_ALL_APPLICANTS);
+        return applicant;
+    }
+
+    @Override
+    public boolean hasApplicant(Applicant applicant) {
+        requireNonNull(applicant);
+        return applicantBook.hasApplicant(applicant);
+    }
+
+    @Override
+    public boolean hasApplicantWithName(Name applicantName) {
+        requireNonNull(applicantName);
+        return applicantBook.hasApplicantWithName(applicantName);
+    }
+
+    @Override
+    public Applicant getApplicantByNameIgnoreCase(Name applicantName) {
+        requireNonNull(applicantName);
+        return applicantBook.getApplicantByNameIgnoreCase(applicantName);
     }
 
     @Override
