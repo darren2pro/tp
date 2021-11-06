@@ -1,0 +1,49 @@
+@startuml
+!include style.puml
+
+box Logic LOGIC_COLOR_T1
+participant ":LogicManager" as LogicManager LOGIC_COLOR
+participant ":MrTechRecruiterParser" as MrTechRecruiterParser LOGIC_COLOR
+participant ":AddApplicantCommandParser" as AddApplicantCommandParser LOGIC_COLOR
+participant "a:AddApplicantCommand" as AddApplicantCommand LOGIC_COLOR
+end box
+
+[-> LogicManager : execute(add-applicant ...)
+activate LogicManager
+note right
+    The full command string
+    is shortened for brevity.
+    You can assume that the
+    arguments are valid.
+end note
+LogicManager -> MrTechRecruiterParser : parseCommand(add-applicant ...)
+
+activate MrTechRecruiterParser
+
+create AddApplicantCommandParser
+MrTechRecruiterParser -> AddApplicantCommandParser
+activate AddApplicantCommandParser
+AddApplicantCommandParser --> MrTechRecruiterParser
+deactivate AddApplicantCommandParser
+
+MrTechRecruiterParser -> AddApplicantCommandParser : parse(arguments)
+activate AddApplicantCommandParser
+create AddApplicantCommand
+AddApplicantCommandParser -> AddApplicantCommand
+activate AddApplicantCommand
+AddApplicantCommand --> AddApplicantCommandParser
+deactivate AddApplicantCommand
+AddApplicantCommandParser --> MrTechRecruiterParser : a:AddApplicantCommand
+deactivate AddApplicantCommandParser
+AddApplicantCommandParser -[hidden]-> MrTechRecruiterParser : a:AddApplicantCommand
+destroy AddApplicantCommandParser
+
+MrTechRecruiterParser -> AddApplicantCommand : execute(Model model)
+activate AddApplicantCommand
+
+AddApplicantCommand --> MrTechRecruiterParser
+deactivate AddApplicantCommand
+
+[<--LogicManager
+deactivate LogicManager
+@enduml

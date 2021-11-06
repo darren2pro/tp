@@ -1,0 +1,15 @@
+@startuml
+start
+if () then ([else])
+    if () then ([else])
+        :Create applicant instance with the
+                input applicant particulars;
+        :Add applicant to applicantBook;
+    else ([no such position])
+        :CommandException;
+    endif
+else ([has applicant duplicate])
+    :CommandException;
+endif
+stop
+@enduml

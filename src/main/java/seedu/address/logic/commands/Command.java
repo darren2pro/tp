@@ -1,12 +1,15 @@
 package seedu.address.logic.commands;
 
 import seedu.address.logic.commands.exceptions.CommandException;
+import seedu.address.logic.commands.memento.Memento;
 import seedu.address.model.Model;
 
 /**
  * Represents a command with hidden internal logic and the ability to be executed.
  */
 public abstract class Command {
+
+    protected Memento memento = new Memento();
 
     /**
      * Executes the command and returns the result message.
@@ -17,4 +20,8 @@ public abstract class Command {
      */
     public abstract CommandResult execute(Model model) throws CommandException;
 
+
+    public Memento getMemento() {
+        return memento;
+    }
 }

@@ -31,7 +31,6 @@ public class MainWindow extends UiPart<Stage> {
     private Logic logic;
 
     // Independent Ui parts residing in this Ui container
-    private PersonListPanel personListPanel;
     private ApplicantListPanel applicantListPanel;
     private PositionListPanel positionListPanel;
     private ResultDisplay resultDisplay;
@@ -42,9 +41,6 @@ public class MainWindow extends UiPart<Stage> {
 
     @FXML
     private MenuItem helpMenuItem;
-
-    @FXML
-    private StackPane personListPanelPlaceholder;
 
     @FXML
     private StackPane applicantListPanelPlaceholder;
@@ -118,47 +114,17 @@ public class MainWindow extends UiPart<Stage> {
      * Fills up all the placeholders of this window.
      */
     void fillInnerParts() {
-        personListPanel = new PersonListPanel(logic.getFilteredPersonList());
-        personListPanelPlaceholder.getChildren().add(personListPanel.getRoot());
+        positionListPanel = new PositionListPanel(logic.getFilteredPositionList());
+        positionListPanelPlaceholder.getChildren().add(positionListPanel.getRoot());
 
-        resultDisplay = new ResultDisplay();
-        resultDisplayPlaceholder.getChildren().add(resultDisplay.getRoot());
-
-        StatusBarFooter statusBarFooter = new StatusBarFooter(logic.getAddressBookFilePath());
-        statusbarPlaceholder.getChildren().add(statusBarFooter.getRoot());
-
-        CommandBox commandBox = new CommandBox(this::executeCommand);
-        commandBoxPlaceholder.getChildren().add(commandBox.getRoot());
-    }
-
-    /**
-     * Fills up all the placeholders of this window with applicants.
-     */
-    void fillInnerPartsWithApplicants() {
         applicantListPanel = new ApplicantListPanel(logic.getFilteredApplicantList());
         applicantListPanelPlaceholder.getChildren().add(applicantListPanel.getRoot());
 
         resultDisplay = new ResultDisplay();
         resultDisplayPlaceholder.getChildren().add(resultDisplay.getRoot());
 
+        // TODO: Display something meaningful in the StatusBarFooter
         StatusBarFooter statusBarFooter = new StatusBarFooter(logic.getApplicantBookFilePath());
-        statusbarPlaceholder.getChildren().add(statusBarFooter.getRoot());
-
-        CommandBox commandBox = new CommandBox(this::executeCommand);
-        commandBoxPlaceholder.getChildren().add(commandBox.getRoot());
-    }
-
-    /**
-     * Fills up all the placeholders of this window.
-     */
-    void fillInnerPartsWithPosition() {
-        positionListPanel = new PositionListPanel(logic.getFilteredPositionList());
-        positionListPanelPlaceholder.getChildren().add(positionListPanel.getRoot());
-
-        resultDisplay = new ResultDisplay();
-        resultDisplayPlaceholder.getChildren().add(resultDisplay.getRoot());
-
-        StatusBarFooter statusBarFooter = new StatusBarFooter(logic.getPositionBookFilePath());
         statusbarPlaceholder.getChildren().add(statusBarFooter.getRoot());
 
         CommandBox commandBox = new CommandBox(this::executeCommand);
@@ -203,10 +169,6 @@ public class MainWindow extends UiPart<Stage> {
         logic.setGuiSettings(guiSettings);
         helpWindow.hide();
         primaryStage.hide();
-    }
-
-    public PersonListPanel getPersonListPanel() {
-        return personListPanel;
     }
 
     /**

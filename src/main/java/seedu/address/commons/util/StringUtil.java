@@ -65,4 +65,23 @@ public class StringUtil {
             return false;
         }
     }
+
+    /**
+     * Converts an input string to proper case (ie first letter capitalized only.)
+     * @throws NullPointerException if {@code s} is null.
+     */
+    public static String toProperCase(String s) {
+        requireNonNull(s);
+
+        if (s.isEmpty()) {
+            return s;
+        }
+
+        if (s.length() == 1) {
+            return s.toUpperCase();
+        }
+
+        return s.substring(0, 1).toUpperCase() + s.substring(1).toLowerCase();
+    }
+
 }

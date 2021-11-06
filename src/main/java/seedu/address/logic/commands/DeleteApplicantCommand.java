@@ -18,8 +18,8 @@ public class DeleteApplicantCommand extends Command {
     public static final String COMMAND_WORD = "delete-applicant";
 
     public static final String MESSAGE_USAGE = COMMAND_WORD
-            + ": Deletes the applicant identified by the index number used in the displayed applicant list.\n"
-            + "Parameters: INDEX (must be a positive integer)\n"
+            + ": Deletes the applicant identified by the index number used in the displayed applicant list." + "\n"
+            + "Parameters: INDEX (must be a positive integer)" + "\n"
             + "Example: " + COMMAND_WORD + " 1";
 
     public static final String MESSAGE_DELETE_APPLICANT_SUCCESS = "Deleted applicant: %1$s";
@@ -39,9 +39,17 @@ public class DeleteApplicantCommand extends Command {
             throw new CommandException(Messages.MESSAGE_INVALID_APPLICANT_DISPLAYED_INDEX);
         }
 
+        memento.record(model.getCopiedModel());
+
         Applicant applicantToDelete = lastShownList.get(targetIndex.getZeroBased());
         model.deleteApplicant(applicantToDelete);
-        return new CommandResult(String.format(MESSAGE_DELETE_APPLICANT_SUCCESS, applicantToDelete));
+
+        String successMessage = String.format(MESSAGE_DELETE_APPLICANT_SUCCESS, applicantToDelete);
+        memento.recordMessage(successMessage);
+
+        model.addToHistory(this);
+
+        return new CommandResult(successMessage);
     }
 
     @Override

@@ -14,5 +14,6 @@ public class CliSyntax {
     public static final Prefix PREFIX_POSITION = new Prefix("pos/");
     public static final Prefix PREFIX_TITLE = new Prefix("tit/");
     public static final Prefix PREFIX_DESCRIPTION = new Prefix("des/");
-
+    public static final Prefix PREFIX_STATUS = new Prefix("status/");
+    public static final Prefix PREFIX_GITHUB_PROFILE = new Prefix("github/");
 }

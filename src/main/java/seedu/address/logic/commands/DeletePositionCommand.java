@@ -18,8 +18,8 @@ public class DeletePositionCommand extends Command {
     public static final String COMMAND_WORD = "delete-position";
 
     public static final String MESSAGE_USAGE = COMMAND_WORD
-            + ": Deletes the position identified by the index number used in the displayed position list.\n"
-            + "Parameters: INDEX (must be a positive integer)\n"
+            + ": Deletes the position identified by the index number used in the displayed position list." + "\n"
+            + "Parameters: INDEX (must be a positive integer)" + "\n"
             + "Example: " + COMMAND_WORD + " 1";
 
     public static final String MESSAGE_DELETE_POSITION_SUCCESS = "Deleted Position: %1$s";
@@ -39,9 +39,17 @@ public class DeletePositionCommand extends Command {
             throw new CommandException(Messages.MESSAGE_INVALID_POSITION_DISPLAYED_INDEX);
         }
 
+        memento.record(model.getCopiedModel());
+
         Position positionToDelete = lastShownList.get(targetIndex.getZeroBased());
         model.deletePosition(positionToDelete);
-        return new CommandResult(String.format(MESSAGE_DELETE_POSITION_SUCCESS, positionToDelete));
+
+        String successMessage = String.format(MESSAGE_DELETE_POSITION_SUCCESS, positionToDelete);
+        memento.recordMessage(successMessage);
+
+        model.addToHistory(this);
+
+        return new CommandResult(successMessage);
     }
 
     @Override

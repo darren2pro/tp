@@ -1,5 +1,6 @@
 package seedu.address.model.position;
 
+import static java.util.Objects.requireNonNull;
 import static seedu.address.commons.util.CollectionUtil.requireAllNonNull;
 
 import java.util.Objects;
@@ -15,15 +16,21 @@ public class Position {
 
     private final Description description;
 
-    // Data field is empty
-
     /**
      * Every field must be present and not null.
      */
     public Position(Title title, Description description) {
-        requireAllNonNull(title);
+        requireAllNonNull(title, description);
         this.title = title;
         this.description = description;
+    }
+
+    /**
+     * Returns true if this position has the specified title.
+     */
+    public boolean hasTitle(Title title) {
+        requireNonNull(title);
+        return this.title.equals(title);
     }
 
     public Title getTitle() {
@@ -80,5 +87,9 @@ public class Position {
                 .append(getDescription());
 
         return builder.toString();
+    }
+
+    public Position getCopiedPosition() {
+        return new Position(title.getCopiedTitle(), description.getCopiedDescription());
     }
 }

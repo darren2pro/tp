@@ -11,10 +11,15 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import seedu.address.commons.core.GuiSettings;
 import seedu.address.commons.core.LogsCenter;
+import seedu.address.logic.commands.Command;
+import seedu.address.logic.commands.memento.History;
+import seedu.address.logic.commands.memento.Memento;
 import seedu.address.model.applicant.Applicant;
-import seedu.address.model.application.Application;
-import seedu.address.model.person.Person;
+import seedu.address.model.applicant.ApplicantParticulars;
+import seedu.address.model.applicant.Application.ApplicationStatus;
+import seedu.address.model.applicant.Name;
 import seedu.address.model.position.Position;
+import seedu.address.model.position.Title;
 
 /**
  * Represents the in-memory model of the address book data.
@@ -22,62 +27,117 @@ import seedu.address.model.position.Position;
 public class ModelManager implements Model {
     private static final Logger logger = LogsCenter.getLogger(ModelManager.class);
 
-    private final AddressBook addressBook;
     private final PositionBook positionBook;
     private final ApplicantBook applicantBook;
-    private final ApplicationBook applicationBook;
     private final UserPrefs userPrefs;
-    private final FilteredList<Person> filteredPersons;
     private final FilteredList<Applicant> filteredApplicants;
     private final FilteredList<Position> filteredPositions;
+    private final History history;
 
     /**
      * Initializes a ModelManager with the given positionBook, applicantBook, applicationBook and userPrefs.
      */
-    public ModelManager(ReadOnlyAddressBook addressBook, ReadOnlyApplicantBook applicantBook,
-                        ReadOnlyPositionBook positionBook, ApplicationBook applicationBook,
+    public ModelManager(ReadOnlyApplicantBook applicantBook,
+                        ReadOnlyPositionBook positionBook,
                         ReadOnlyUserPrefs userPrefs) {
         super();
-        requireAllNonNull(addressBook, applicantBook, positionBook, applicationBook, userPrefs);
+        requireAllNonNull(applicantBook, positionBook, userPrefs);
 
-        logger.fine("Initializing with address book: " + addressBook
-                + ", applicant book: " + applicantBook
+        logger.fine("Initializing with applicant book: " + applicantBook
                 + ", position book: " + positionBook
-                + ", application book: " + applicationBook
                 + ", userPrefs: " + userPrefs);
 
-        this.addressBook = new AddressBook(addressBook);
         this.positionBook = new PositionBook(positionBook);
         this.applicantBook = new ApplicantBook(applicantBook);
-        this.applicationBook = new ApplicationBook(applicationBook);
         this.userPrefs = new UserPrefs(userPrefs);
-        filteredPersons = new FilteredList<>(this.addressBook.getPersonList());
         filteredApplicants = new FilteredList<>(this.applicantBook.getApplicantList());
         filteredPositions = new FilteredList<>(this.positionBook.getPositionList());
+        history = new History();
     }
+
+    /**
+     * Initializes a ModelManager with the given positionBook, applicantBook and userPrefs.
+     */
+    public ModelManager(ReadOnlyApplicantBook applicantBook,
+                        ReadOnlyPositionBook positionBook,
+                        ReadOnlyUserPrefs userPrefs, History changeHistory) {
+        super();
+        requireAllNonNull(applicantBook, positionBook, userPrefs);
+
+        logger.fine("Initializing with applicant book: " + applicantBook
+                + ", position book: " + positionBook
+                + ", userPrefs: " + userPrefs);
+
+        this.positionBook = new PositionBook(positionBook);
+        this.applicantBook = new ApplicantBook(applicantBook);
+        this.userPrefs = new UserPrefs(userPrefs);
+        filteredApplicants = new FilteredList<>(this.applicantBook.getApplicantList());
+        filteredPositions = new FilteredList<>(this.positionBook.getPositionList());
+        this.history = changeHistory;
+    }
+
 
     /**
      * Old constructor - left temporarily to pass unit tests
      * Initializes a ModelManager with the given addressBook and userPrefs.
      */
-    public ModelManager(ReadOnlyAddressBook addressBook, ReadOnlyUserPrefs userPrefs) {
+    public ModelManager(ReadOnlyUserPrefs userPrefs) {
         super();
-        requireAllNonNull(addressBook, userPrefs);
+        requireAllNonNull(userPrefs);
 
-        logger.fine("Initializing with address book: " + addressBook + " and user prefs " + userPrefs);
+        logger.fine("Initializing with user prefs " + userPrefs);
 
-        this.addressBook = new AddressBook(addressBook);
         this.positionBook = new PositionBook();
         this.applicantBook = new ApplicantBook();
-        this.applicationBook = new ApplicationBook();
         this.userPrefs = new UserPrefs(userPrefs);
-        filteredPersons = new FilteredList<>(this.addressBook.getPersonList());
+
         filteredApplicants = new FilteredList<>(this.applicantBook.getApplicantList());
         filteredPositions = new FilteredList<>(this.positionBook.getPositionList());
+        history = new History();
     }
 
+    /**
+     * Left temporarily to pass unit tests
+     * Initializes a ModelManager with the given positionBook and userPrefs.
+     */
+    public ModelManager(ReadOnlyPositionBook positionBook, ReadOnlyUserPrefs userPrefs) {
+        super();
+        requireAllNonNull(positionBook, userPrefs);
+
+        logger.fine("Initializing with position book: " + positionBook + " and user prefs " + userPrefs);
+
+        this.positionBook = new PositionBook(positionBook);
+        this.applicantBook = new ApplicantBook();
+        this.userPrefs = new UserPrefs(userPrefs);
+
+        filteredApplicants = new FilteredList<>(this.applicantBook.getApplicantList());
+        filteredPositions = new FilteredList<>(this.positionBook.getPositionList());
+        history = new History();
+    }
+
+
+    /**
+     * Old constructor - left temporarily to pass unit tests.
+     */
+    public ModelManager(ReadOnlyPositionBook positionBook, ReadOnlyApplicantBook applicantBook,
+                        ReadOnlyUserPrefs userPrefs) {
+        super();
+        requireAllNonNull(positionBook, userPrefs);
+
+        logger.fine("Initializing with position book: " + positionBook + " and user prefs " + userPrefs);
+
+        this.positionBook = new PositionBook(positionBook);
+        this.applicantBook = new ApplicantBook(applicantBook);
+        this.userPrefs = new UserPrefs(userPrefs);
+
+        filteredApplicants = new FilteredList<>(this.applicantBook.getApplicantList());
+        filteredPositions = new FilteredList<>(this.positionBook.getPositionList());
+        history = new History();
+    }
+
+
     public ModelManager() {
-        this(new AddressBook(), new ApplicantBook(), new PositionBook(), new ApplicationBook(), new UserPrefs());
+        this(new ApplicantBook(), new PositionBook(), new UserPrefs());
     }
 
     //=========== UserPrefs ==================================================================================
@@ -104,9 +164,14 @@ public class ModelManager implements Model {
         userPrefs.setGuiSettings(guiSettings);
     }
 
+
+
+    //=========== Position and PositionBook =========================================================================
+
     @Override
-    public Path getAddressBookFilePath() {
-        return userPrefs.getAddressBookFilePath();
+    public void setPosition(Position target, Position editedPosition) {
+        requireAllNonNull(target, editedPosition);
+        positionBook.setPosition(target, editedPosition);
     }
 
     @Override
@@ -115,32 +180,81 @@ public class ModelManager implements Model {
     }
 
     @Override
-    public void setAddressBookFilePath(Path addressBookFilePath) {
-        requireNonNull(addressBookFilePath);
-        userPrefs.setAddressBookFilePath(addressBookFilePath);
-    }
-
-    //=========== AddressBook ================================================================================
-
-    @Override
-    public void setAddressBook(ReadOnlyAddressBook addressBook) {
-        this.addressBook.resetData(addressBook);
+    public boolean hasPosition(Position position) {
+        requireNonNull(position);
+        return positionBook.hasPosition(position);
     }
 
     @Override
-    public ReadOnlyAddressBook getAddressBook() {
-        return addressBook;
+    public boolean hasPositionWithTitle(Title title) {
+        requireNonNull(title);
+        return positionBook.hasPositionWithTitle(title);
     }
 
     @Override
-    public boolean hasPerson(Person person) {
-        requireNonNull(person);
-        return addressBook.hasPerson(person);
+    public Position getPositionWithTitle(Title title) {
+        return positionBook.getPositionWithTitle(title);
     }
 
     @Override
-    public void deletePerson(Person target) {
-        addressBook.removePerson(target);
+    public void addPosition(Position position) {
+        positionBook.addPosition(position);
+        updateFilteredPositionList(PREDICATE_SHOW_ALL_POSITIONS);
+    }
+
+    @Override
+    public void deletePosition(Position positionToDelete) {
+        positionBook.removePosition(positionToDelete);
+        applicantBook.removeApplicantsUnderPosition(positionToDelete);
+    }
+
+    @Override
+    public void setPositionBook(ReadOnlyPositionBook positionBook) {
+        this.positionBook.resetData(positionBook);
+    }
+
+    @Override
+    public ReadOnlyPositionBook getPositionBook() {
+        return positionBook;
+    }
+
+    @Override
+    public ObservableList<Position> getFilteredPositionList() {
+        return filteredPositions;
+    }
+
+    @Override
+    public void updateFilteredPositionList(Predicate<Position> predicate) {
+        requireNonNull(predicate);
+        filteredPositions.setPredicate(predicate);
+    }
+
+    //=========== Applicant and ApplicantBook =============================================================
+
+    @Override
+    public Path getApplicantBookFilePath() {
+        return userPrefs.getApplicantBookFilePath();
+    }
+
+    public void setApplicantBook(ReadOnlyApplicantBook applicantBook) {
+        this.applicantBook.resetData(applicantBook);
+    }
+
+    @Override
+    public void setApplicant(Applicant target, Applicant editedApplicant) {
+        requireAllNonNull(target, editedApplicant);
+        applicantBook.setApplicant(target, editedApplicant);
+    }
+
+    @Override
+    public ReadOnlyApplicantBook getApplicantBook() {
+        return applicantBook;
+    }
+
+    @Override
+    public void addApplicant(Applicant applicant) {
+        applicantBook.addApplicant(applicant);
+        updateFilteredApplicantList(PREDICATE_SHOW_ALL_APPLICANTS);
     }
 
     @Override
@@ -149,22 +263,14 @@ public class ModelManager implements Model {
     }
 
     @Override
-    public void addPerson(Person person) {
-        addressBook.addPerson(person);
-        updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
-    }
-
-    @Override
-    public void addApplicantToPosition(Applicant applicant, Position dummyPosition) {
-        Position position = positionBook.getPosition(dummyPosition);
-        Application application = new Application(applicant, position);
-
-        // Sets the application of the applicant to the application with original position object
-        applicant.setApplication(application);
+    public Applicant addApplicantWithParticulars(ApplicantParticulars applicantParticulars) {
+        Title positionTitle = applicantParticulars.getPositionTitle();
+        Position position = positionBook.getPositionWithTitle(positionTitle);
+        Applicant applicant = new Applicant(applicantParticulars, position);
 
         applicantBook.addApplicant(applicant);
-        applicationBook.addApplication(application);
         updateFilteredApplicantList(PREDICATE_SHOW_ALL_APPLICANTS);
+        return applicant;
     }
 
     @Override
@@ -174,26 +280,33 @@ public class ModelManager implements Model {
     }
 
     @Override
-    public void setPerson(Person target, Person editedPerson) {
-        requireAllNonNull(target, editedPerson);
-        addressBook.setPerson(target, editedPerson);
+    public boolean hasApplicantWithName(Name applicantName) {
+        requireNonNull(applicantName);
+        return applicantBook.hasApplicantWithName(applicantName);
     }
 
     @Override
-    public void setApplicant(Applicant target, Applicant editedApplicant) {
-        requireAllNonNull(target, editedApplicant);
-        applicantBook.setApplicant(target, editedApplicant);
+    public boolean hasApplicantsApplyingTo(Position position) {
+        requireNonNull(position);
+        return applicantBook.hasApplicantsApplyingTo(position);
     }
 
-    //=========== Filtered Person List Accessors =============================================================
-
-    /**
-     * Returns an unmodifiable view of the list of {@code Person} backed by the internal list of
-     * {@code versionedAddressBook}
-     */
     @Override
-    public ObservableList<Person> getFilteredPersonList() {
-        return filteredPersons;
+    public Applicant getApplicantWithName(Name applicantName) {
+        requireNonNull(applicantName);
+        return applicantBook.getApplicantWithName(applicantName);
+    }
+
+    @Override
+    public void updateApplicantsWithPosition(Position positionToEdit, Position editedPosition) {
+        requireAllNonNull(positionToEdit, editedPosition);
+        applicantBook.updateApplicantsWithPosition(positionToEdit, editedPosition);
+    }
+
+    @Override
+    public void updateFilteredApplicantList(Predicate<Applicant> predicate) {
+        requireNonNull(predicate);
+        filteredApplicants.setPredicate(predicate);
     }
 
     @Override
@@ -201,16 +314,56 @@ public class ModelManager implements Model {
         return filteredApplicants;
     }
 
+    //========== Rejection rates =======================================
+
+    /**
+     * Initialise rejection rate of a new position.
+     *
+     * @param title The title of the position to be calculated.
+     * @return The rejection rate of a given position in MTR.
+     */
     @Override
-    public void updateFilteredPersonList(Predicate<Person> predicate) {
-        requireNonNull(predicate);
-        filteredPersons.setPredicate(predicate);
+    public float calculateRejectionRate(Title title) {
+        Position currPosition = positionBook.getPositionWithTitle(title);
+        int total = (int) applicantBook.getApplicantList()
+                .stream()
+                .filter(applicant -> applicant.isApplyingTo(currPosition))
+                .count();
+
+        int count = (int) applicantBook.getApplicantList()
+                .stream()
+                .filter(applicant -> applicant.isApplyingTo(currPosition)
+                        && (applicant.hasApplicationStatus(ApplicationStatus.REJECTED)))
+                .count();
+        return Calculator.calculateRejectionRate(total, count);
+    }
+
+
+    @Override
+    public Model getCopiedModel() {
+        return new ModelManager(applicantBook.getCopiedApplicantBook(),
+                positionBook.getCopiedPositionBook(), this.userPrefs, this.history);
     }
 
     @Override
-    public void updateFilteredApplicantList(Predicate<Applicant> predicateShowAllApplicants) {
-        requireNonNull(predicateShowAllApplicants);
-        filteredApplicants.setPredicate(predicateShowAllApplicants);
+    public void addToHistory(Command command) {
+        history.add(command);
+    }
+
+
+    @Override
+    public boolean hasHistory() {
+        return history.hasHistory();
+    }
+
+    @Override
+    public String recoverHistory() {
+        Memento memento = history.recoverHistory();
+        Model previousModel = memento.getModel();
+        this.setPositionBook(previousModel.getPositionBook());
+        this.setApplicantBook(previousModel.getApplicantBook());
+
+        return memento.getMessage();
     }
 
     @Override
@@ -227,46 +380,11 @@ public class ModelManager implements Model {
 
         // state check
         ModelManager other = (ModelManager) obj;
-        return addressBook.equals(other.addressBook)
-                && userPrefs.equals(other.userPrefs)
-                && filteredPersons.equals(other.filteredPersons);
-    }
-
-    // Position related methods
-    @Override
-    public boolean hasPosition(Position position) {
-        requireNonNull(position);
-        return positionBook.hasPosition(position);
-    }
-
-    @Override
-    public void addPosition(Position position) {
-        positionBook.addPosition(position);
-        updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
-    }
-
-    @Override
-    public void deletePosition(Position positionToDelete) {
-        positionBook.removePosition(positionToDelete);
-    }
-
-
-    //=========== Filtered Position List Accessors =============================================================
-    @Override
-    public ObservableList<Position> getFilteredPositionList() {
-        return filteredPositions;
-    }
-
-    @Override
-    public void updateFilteredPositionList(Predicate<Position> predicate) {
-        requireNonNull(predicate);
-        filteredPositions.setPredicate(predicate);
-    }
-
-    //=========== Filtered Applicant List Accessors =============================================================
-    @Override
-    public Path getApplicantBookFilePath() {
-        return userPrefs.getApplicantBookFilePath();
+        return positionBook.equals(other.positionBook)
+                && applicantBook.equals(other.applicantBook)
+                && filteredPositions.equals(other.filteredPositions)
+                && filteredApplicants.equals(other.filteredApplicants)
+                && userPrefs.equals(other.userPrefs);
     }
 
 }

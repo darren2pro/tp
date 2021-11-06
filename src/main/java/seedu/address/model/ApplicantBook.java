@@ -6,7 +6,9 @@ import java.util.List;
 
 import javafx.collections.ObservableList;
 import seedu.address.model.applicant.Applicant;
+import seedu.address.model.applicant.Name;
 import seedu.address.model.applicant.UniqueApplicantList;
+import seedu.address.model.position.Position;
 
 /**
  * Wraps all applicant data at ApplicantBook level
@@ -56,12 +58,37 @@ public class ApplicantBook implements ReadOnlyApplicantBook {
     }
 
     //// position-level operations
+
     /**
-     * Returns true if an applicant with the same identity as {@code applicant} exists in the applicant book.
+     * Returns true if the {@code applicant} exists in the applicant book.
      */
     public boolean hasApplicant(Applicant applicant) {
         requireNonNull(applicant);
         return applicants.contains(applicant);
+    }
+
+    /**
+     * Returns true if an applicant with the name {@code applicantName} exists in the applicant book.
+     */
+    public boolean hasApplicantWithName(Name applicantName) {
+        requireNonNull(applicantName);
+        return applicants.containsApplicantWithName(applicantName);
+    }
+
+    /**
+     * Returns true if there are applicants applying to {@code position} in the applicant book.
+     */
+    public boolean hasApplicantsApplyingTo(Position position) {
+        requireNonNull(position);
+        return applicants.hasApplicantsApplyingTo(position);
+    }
+
+    /**
+     * Returns the applicant with the specified name, if any.
+     */
+    public Applicant getApplicantWithName(Name applicantName) {
+        requireNonNull(applicantName);
+        return applicants.getApplicantWithName(applicantName);
     }
 
     /**
@@ -91,6 +118,15 @@ public class ApplicantBook implements ReadOnlyApplicantBook {
         applicants.remove(key);
     }
 
+    public void removeApplicantsUnderPosition(Position position) {
+        applicants.removeIf(applicant -> applicant.isApplyingTo(position));
+    }
+
+    public void updateApplicantsWithPosition(Position positionToEdit,
+                                             Position editedPosition) {
+        applicants.updateApplicantsWithPosition(positionToEdit, editedPosition);
+    }
+
     @Override
     public String toString() {
         return applicants.asUnmodifiableObservableList().size() + " applicants";
@@ -107,6 +143,13 @@ public class ApplicantBook implements ReadOnlyApplicantBook {
         return other == this // short circuit if same object
                 || (other instanceof ApplicantBook // instanceof handles nulls
                 && applicants.equals(((ApplicantBook) other).applicants));
+    }
+
+    public ApplicantBook getCopiedApplicantBook() {
+        ApplicantBook copiedApplicantBook = new ApplicantBook();
+        copiedApplicantBook.applicants.setApplicants(this.applicants.getCopiedApplicants());
+
+        return copiedApplicantBook;
     }
 
 }

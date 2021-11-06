@@ -6,6 +6,7 @@ import java.util.List;
 
 import javafx.collections.ObservableList;
 import seedu.address.model.position.Position;
+import seedu.address.model.position.Title;
 import seedu.address.model.position.UniquePositionList;
 
 /**
@@ -16,6 +17,13 @@ public class PositionBook implements ReadOnlyPositionBook {
 
     private final UniquePositionList positions;
 
+    /*
+     * The 'unusual' code block below is a non-static initialization block, sometimes used to avoid duplication
+     * between constructors. See https://docs.oracle.com/javase/tutorial/java/javaOO/initial.html
+     *
+     * Note that non-static init blocks are not recommended to use. There are other ways to avoid duplication
+     *   among constructors.
+     */
     {
         positions = new UniquePositionList();
     }
@@ -49,12 +57,21 @@ public class PositionBook implements ReadOnlyPositionBook {
     }
 
     //// position-level operations
+
     /**
      * Returns true if a position with the same identity as {@code position} exists in the position book.
      */
     public boolean hasPosition(Position position) {
         requireNonNull(position);
         return positions.contains(position);
+    }
+
+    /**
+     * Returns true if a position titled {@code title} exists in the position book.
+     */
+    public boolean hasPositionWithTitle(Title title) {
+        requireNonNull(title);
+        return positions.containsPositionWithTitle(title);
     }
 
     /**
@@ -65,12 +82,9 @@ public class PositionBook implements ReadOnlyPositionBook {
         positions.add(p);
     }
 
-    /**
-     * Searches for a position with the same identity as {@code dummyPosition}.
-     */
-    public Position getPosition(Position dummyPosition) {
-        requireNonNull(dummyPosition);
-        return positions.getPosition(dummyPosition);
+    public Position getPositionWithTitle(Title title) {
+        requireNonNull(title);
+        return positions.getPositionWithTitle(title);
     }
 
     /**
@@ -92,6 +106,7 @@ public class PositionBook implements ReadOnlyPositionBook {
     public void removePosition(Position key) {
         positions.remove(key);
     }
+
 
     //// util methods
 
@@ -116,6 +131,13 @@ public class PositionBook implements ReadOnlyPositionBook {
     @Override
     public int hashCode() {
         return positions.hashCode();
+    }
+
+    public PositionBook getCopiedPositionBook() {
+        PositionBook copiedPositionBook = new PositionBook();
+        copiedPositionBook.positions.setPositions(this.positions.getCopiedPositions());
+
+        return copiedPositionBook;
     }
 
 }

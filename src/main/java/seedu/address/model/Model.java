@@ -5,18 +5,24 @@ import java.util.function.Predicate;
 
 import javafx.collections.ObservableList;
 import seedu.address.commons.core.GuiSettings;
+import seedu.address.logic.commands.Command;
 import seedu.address.model.applicant.Applicant;
-import seedu.address.model.person.Person;
+import seedu.address.model.applicant.ApplicantParticulars;
+import seedu.address.model.applicant.Name;
 import seedu.address.model.position.Position;
+import seedu.address.model.position.Title;
 
 /**
  * The API of the Model component.
  */
 public interface Model {
-    /** {@code Predicate} that always evaluate to true */
-    Predicate<Person> PREDICATE_SHOW_ALL_PERSONS = unused -> true;
+    /**
+     * {@code Predicate} that always evaluate to true
+     */
     Predicate<Position> PREDICATE_SHOW_ALL_POSITIONS = unused -> true;
     Predicate<Applicant> PREDICATE_SHOW_ALL_APPLICANTS = unused -> true;
+
+    //=========== User prefs related methods =============================================================
 
     /**
      * Replaces user prefs data with the data in {@code userPrefs}.
@@ -38,10 +44,53 @@ public interface Model {
      */
     void setGuiSettings(GuiSettings guiSettings);
 
+    //=========== Position related methods =============================================================
+
     /**
-     * Returns the user prefs' address book file path.
+     * Replaces the given position {@code target} with {@code editedPosition}.
+     * {@code target} must exist in MrTechRecruiter.
+     * The position identity of {@code editedPosition} must not be the same as another existing position in
+     * MrTechRecruiter.
      */
-    Path getAddressBookFilePath();
+    void setPosition(Position position, Position editedPosition);
+
+    /**
+     * Returns true if a position with the same identity as {@code position} exists in the position book
+     */
+    boolean hasPosition(Position position);
+
+    /**
+     * Returns true if a position with {@code title} exists in the position book
+     */
+    boolean hasPositionWithTitle(Title title);
+
+    /**
+     * Returns the position with {@code title}
+     */
+    Position getPositionWithTitle(Title title);
+
+    /** Returns an unmodifiable view of the filtered applicant list */
+    ObservableList<Applicant> getFilteredApplicantList();
+
+    /**
+     * Returns an unmodifiable view of the filtered position list
+     */
+    ObservableList<Position> getFilteredPositionList();
+
+    /**
+     * Updates the filter of the filtered person list to filter by the given {@code predicate}.
+     *
+     * @throws NullPointerException if {@code predicate} is null.
+     * Adds the given position.
+     * {@code position} must not already exist in the position book.
+     */
+    void addPosition(Position position);
+
+    /**
+     * Deletes the given position.
+     * The position must exist in the position book.
+     */
+    void deletePosition(Position position);
 
     /**
      * Returns the user prefs' position book file path.
@@ -49,58 +98,23 @@ public interface Model {
     Path getPositionBookFilePath();
 
     /**
-     * Sets the user prefs' address book file path.
+     * Replaces position book data with the data in {@code positionBook}.
      */
-    void setAddressBookFilePath(Path addressBookFilePath);
+    void setPositionBook(ReadOnlyPositionBook positionBook);
 
     /**
-     * Replaces address book data with the data in {@code addressBook}.
+     * Returns the PositionBook
      */
-    void setAddressBook(ReadOnlyAddressBook addressBook);
-
-    /** Returns the AddressBook */
-    ReadOnlyAddressBook getAddressBook();
+    ReadOnlyPositionBook getPositionBook();
 
     /**
-     * Returns true if a person with the same identity as {@code person} exists in the address book.
+     * Updates the filter of the filtered position list to filter by the given {@code predicate}.
+     *
+     * @throws NullPointerException if {@code predicate} is null.
      */
-    boolean hasPerson(Person person);
+    void updateFilteredPositionList(Predicate<Position> predicate);
 
-    /**
-     * Deletes the given person.
-     * The person must exist in the address book.
-     */
-    void deletePerson(Person target);
-
-    /**
-     * Deletes the given applicant.
-     * The applicant must exist in the address book.
-     */
-    void deleteApplicant(Applicant target);
-
-    /**
-     * Adds the given person.
-     * {@code person} must not already exist in the address book.
-     */
-    void addPerson(Person person);
-
-    /**
-     * Adds the given applicant to the given position.
-     * {@code applicant} must not already exist in the applicant book.
-     */
-    void addApplicantToPosition(Applicant applicant, Position position);
-
-    /**
-     * Returns true if an applicant with the same identity as {@code applicant} exists MrTechRecruiter.
-     */
-    boolean hasApplicant(Applicant applicant);
-
-    /**
-     * Replaces the given person {@code target} with {@code editedPerson}.
-     * {@code target} must exist in the address book.
-     * The person identity of {@code editedPerson} must not be the same as another existing person in the address book.
-     */
-    void setPerson(Person target, Person editedPerson);
+    //=========== Applicant related methods =============================================================
 
     /**
      * Replaces the given applicant {@code target} with {@code editedApplicant}.
@@ -108,34 +122,93 @@ public interface Model {
      * The applicant identity of {@code editedApplicant} must not be the same as another existing person in
      * MrTechRecruiter.
      */
-    public void setApplicant(Applicant target, Applicant editedApplicant);
-
-    /** Returns an unmodifiable view of the filtered person list */
-    ObservableList<Person> getFilteredPersonList();
-
-    /** Returns an unmodifiable view of the filtered applicant list */
-    ObservableList<Applicant> getFilteredApplicantList();
+    void setApplicant(Applicant target, Applicant editedApplicant);
 
     /**
-     * Updates the filter of the filtered person list to filter by the given {@code predicate}.
+     * Adds the given applicant.
+     * {@code applicant} must not already exist in the applicant book.
+     */
+    void addApplicant(Applicant applicant);
+
+    /**
+     * Adds a new applicant to MrTechRecruiter with the given particulars.
+     * The intended applicant must not already exist in the applicant book.
+     *
+     * @return the newly added applicant.
+     */
+    Applicant addApplicantWithParticulars(ApplicantParticulars applicantParticulars);
+
+    /**
+     * Returns true if {@code applicant} exists in MrTechRecruiter.
+     */
+    boolean hasApplicant(Applicant applicant);
+
+    /**
+     * Returns true if an applicant named {@code applicantName} exists in MrTechRecruiter.
+     */
+    boolean hasApplicantWithName(Name applicantName);
+
+    /**
+     * Returns true if MrTechRecruiter has applicants applying to
+     * the specified position.
+     */
+    boolean hasApplicantsApplyingTo(Position position);
+
+    /**
+     * Returns the applicant with the specified name, if any.
+     */
+    Applicant getApplicantWithName(Name name);
+
+    /**
+     * Deletes the given applicant.
+     * The applicant must exist in the address book.
+     */
+    void deleteApplicant(Applicant target);
+
+    Path getApplicantBookFilePath();
+
+    /**
+     * Calculates the rejection rate of a given position.
+     * @param title The title of the position to be calculated.
+     * @return The rejection rate of the specified position.
+     */
+    float calculateRejectionRate(Title title);
+
+    /**
+     * Replaces position book data with the data in {@code positionBook}.
+     */
+    void setApplicantBook(ReadOnlyApplicantBook applicantBook);
+
+    /** Returns the ApplicantBook */
+    ReadOnlyApplicantBook getApplicantBook();
+
+    /**
+     * Updates the filter of the filtered position list to filter by the given {@code predicate}.
      * @throws NullPointerException if {@code predicate} is null.
      */
-    void updateFilteredPersonList(Predicate<Person> predicate);
-
     void updateFilteredApplicantList(Predicate<Applicant> predicateShowAllApplicants);
 
-    // Position related methods
-    boolean hasPosition(Position toAdd);
+    void updateApplicantsWithPosition(Position positionToEdit, Position editedPosition);
 
-    void addPosition(Position toAdd);
 
-    void deletePosition(Position positionToDelete);
+    /**
+     * Returns a deep-copied model.
+     */
+    Model getCopiedModel();
 
-    //=========== Filtered Position List Accessors =============================================================
-    ObservableList<Position> getFilteredPositionList();
+    /**
+     * Records the modification history.
+     */
+    void addToHistory(Command command);
 
-    void updateFilteredPositionList(Predicate<Position> predicate);
+    /**
+     * Returns true if there exists history to recover.
+     */
+    boolean hasHistory();
 
-    // Applicant related methods ==============================================================================
-    Path getApplicantBookFilePath();
+    /**
+     * Undoes the previous modification.
+     */
+    String recoverHistory();
+
 }

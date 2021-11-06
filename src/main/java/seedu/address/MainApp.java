@@ -15,19 +15,23 @@ import seedu.address.commons.util.ConfigUtil;
 import seedu.address.commons.util.StringUtil;
 import seedu.address.logic.Logic;
 import seedu.address.logic.LogicManager;
-import seedu.address.model.AddressBook;
+import seedu.address.model.ApplicantBook;
 import seedu.address.model.Model;
 import seedu.address.model.ModelManager;
-import seedu.address.model.ReadOnlyAddressBook;
+import seedu.address.model.PositionBook;
+import seedu.address.model.ReadOnlyApplicantBook;
+import seedu.address.model.ReadOnlyPositionBook;
 import seedu.address.model.ReadOnlyUserPrefs;
 import seedu.address.model.UserPrefs;
 import seedu.address.model.util.SampleDataUtil;
-import seedu.address.storage.AddressBookStorage;
-import seedu.address.storage.JsonAddressBookStorage;
 import seedu.address.storage.JsonUserPrefsStorage;
 import seedu.address.storage.Storage;
 import seedu.address.storage.StorageManager;
 import seedu.address.storage.UserPrefsStorage;
+import seedu.address.storage.applicant.ApplicantBookStorage;
+import seedu.address.storage.applicant.JsonApplicantBookStorage;
+import seedu.address.storage.position.JsonPositionBookStorage;
+import seedu.address.storage.position.PositionBookStorage;
 import seedu.address.ui.Ui;
 import seedu.address.ui.UiManager;
 
@@ -36,7 +40,7 @@ import seedu.address.ui.UiManager;
  */
 public class MainApp extends Application {
 
-    public static final Version VERSION = new Version(0, 2, 0, true);
+    public static final Version VERSION = new Version(0, 3, 0, true);
 
     private static final Logger logger = LogsCenter.getLogger(MainApp.class);
 
@@ -45,6 +49,10 @@ public class MainApp extends Application {
     protected Storage storage;
     protected Model model;
     protected Config config;
+
+    public static void openLinkInBrowser(String urlString) {
+
+    }
 
     @Override
     public void init() throws Exception {
@@ -56,8 +64,9 @@ public class MainApp extends Application {
 
         UserPrefsStorage userPrefsStorage = new JsonUserPrefsStorage(config.getUserPrefsFilePath());
         UserPrefs userPrefs = initPrefs(userPrefsStorage);
-        AddressBookStorage addressBookStorage = new JsonAddressBookStorage(userPrefs.getAddressBookFilePath());
-        storage = new StorageManager(addressBookStorage, userPrefsStorage);
+        PositionBookStorage positionBookStorage = new JsonPositionBookStorage(userPrefs.getPositionBookFilePath());
+        ApplicantBookStorage applicantBookStorage = new JsonApplicantBookStorage(userPrefs.getApplicantBookFilePath());
+        storage = new StorageManager(userPrefsStorage, applicantBookStorage, positionBookStorage);
 
         initLogging(config);
 
@@ -74,23 +83,39 @@ public class MainApp extends Application {
      * or an empty address book will be used instead if errors occur when reading {@code storage}'s address book.
      */
     private Model initModelManager(Storage storage, ReadOnlyUserPrefs userPrefs) {
-        Optional<ReadOnlyAddressBook> addressBookOptional;
-        ReadOnlyAddressBook initialData;
+        Optional<ReadOnlyPositionBook> positionBookOptional;
+        Optional<ReadOnlyApplicantBook> applicantBookOptional;
+        ReadOnlyPositionBook initialPositionBookData;
+        ReadOnlyApplicantBook initialApplicantBookData;
         try {
-            addressBookOptional = storage.readAddressBook();
-            if (!addressBookOptional.isPresent()) {
-                logger.info("Data file not found. Will be starting with a sample AddressBook");
+
+            positionBookOptional = storage.readPositionBook();
+            if (!positionBookOptional.isPresent()) {
+                logger.info("Positionbook data file not found. Will be starting with a sample PositionBook");
             }
-            initialData = addressBookOptional.orElseGet(SampleDataUtil::getSampleAddressBook);
+            initialPositionBookData = positionBookOptional.orElseGet(SampleDataUtil::getSamplePositionBook);
+
+            applicantBookOptional = storage.readApplicantBook(initialPositionBookData);
+            if (!applicantBookOptional.isPresent()) {
+                logger.info("Applicantbook data file not found. Will be starting with a sample ApplicantBook");
+            }
+            initialApplicantBookData = applicantBookOptional.orElseGet(SampleDataUtil::getSampleApplicantBook);
+
         } catch (DataConversionException e) {
-            logger.warning("Data file not in the correct format. Will be starting with an empty AddressBook");
-            initialData = new AddressBook();
+            logger.warning("Data file not in the correct format. Will be starting with an empty "
+                    + "PositionBook/ApplicantBook");
+
+            initialPositionBookData = new PositionBook();
+            initialApplicantBookData = new ApplicantBook();
         } catch (IOException e) {
-            logger.warning("Problem while reading from the file. Will be starting with an empty AddressBook");
-            initialData = new AddressBook();
+            logger.warning("Problem while reading from the file. Will be starting with an empty "
+                    + "PositionBook/ApplicantBook");
+
+            initialPositionBookData = new PositionBook();
+            initialApplicantBookData = new ApplicantBook();
         }
 
-        return new ModelManager(initialData, userPrefs);
+        return new ModelManager(initialApplicantBookData, initialPositionBookData, userPrefs);
     }
 
     private void initLogging(Config config) {
@@ -167,17 +192,18 @@ public class MainApp extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        logger.info("Starting AddressBook " + MainApp.VERSION);
+        logger.info("Starting MTR " + MainApp.VERSION);
         ui.start(primaryStage);
     }
 
     @Override
     public void stop() {
-        logger.info("============================ [ Stopping Address Book ] =============================");
+        logger.info("============================ [ Stopping MrTechRecruiter ] =============================");
         try {
             storage.saveUserPrefs(model.getUserPrefs());
         } catch (IOException e) {
             logger.severe("Failed to save preferences " + StringUtil.getDetails(e));
         }
     }
+
 }

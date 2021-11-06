@@ -48,4 +48,8 @@ public class Phone {
     public int hashCode() {
         return value.hashCode();
     }
+
+    public Phone getCopiedPhone() {
+        return new Phone(value);
+    }
 }

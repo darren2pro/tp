@@ -5,12 +5,13 @@ import static seedu.address.commons.util.AppUtil.checkArgument;
 
 /**
  * Represents a Position's title in the position book.
+ * Equality checks use case-insensitive comparisons.
  * Guarantees: immutable; is valid as declared in {@link #isValidTitle(String)}
  */
 public class Title {
 
     public static final String MESSAGE_CONSTRAINTS =
-            "Titles should only contain alphanumeric characters and spaces, and it should not be blank";
+            "Position titles should only contain alphanumeric characters and spaces, and it should not be blank";
 
     /*
      * The first character of the Title must not be a whitespace,
@@ -47,12 +48,15 @@ public class Title {
     public boolean equals(Object other) {
         return other == this // short circuit if same object
                 || (other instanceof Title // instanceof handles nulls
-                && fullTitle.equals(((Title) other).fullTitle)); // state check
+                && fullTitle.equalsIgnoreCase(((Title) other).fullTitle)); // state check
     }
 
     @Override
     public int hashCode() {
-        return fullTitle.hashCode();
+        return fullTitle.toLowerCase().hashCode();
     }
 
+    public Title getCopiedTitle() {
+        return new Title(fullTitle);
+    }
 }

@@ -10,12 +10,10 @@ import seedu.address.commons.core.LogsCenter;
 import seedu.address.logic.commands.Command;
 import seedu.address.logic.commands.CommandResult;
 import seedu.address.logic.commands.exceptions.CommandException;
-import seedu.address.logic.parser.AddressBookParser;
+import seedu.address.logic.parser.MrTechRecruiterParser;
 import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.Model;
-import seedu.address.model.ReadOnlyAddressBook;
 import seedu.address.model.applicant.Applicant;
-import seedu.address.model.person.Person;
 import seedu.address.model.position.Position;
 import seedu.address.storage.Storage;
 
@@ -28,7 +26,7 @@ public class LogicManager implements Logic {
 
     private final Model model;
     private final Storage storage;
-    private final AddressBookParser addressBookParser;
+    private final MrTechRecruiterParser mrTechRecruiterParser;
 
     /**
      * Constructs a {@code LogicManager} with the given {@code Model} and {@code Storage}.
@@ -36,7 +34,7 @@ public class LogicManager implements Logic {
     public LogicManager(Model model, Storage storage) {
         this.model = model;
         this.storage = storage;
-        addressBookParser = new AddressBookParser();
+        this.mrTechRecruiterParser = new MrTechRecruiterParser();
     }
 
     @Override
@@ -44,26 +42,17 @@ public class LogicManager implements Logic {
         logger.info("----------------[USER COMMAND][" + commandText + "]");
 
         CommandResult commandResult;
-        Command command = addressBookParser.parseCommand(commandText);
+        Command command = mrTechRecruiterParser.parseCommand(commandText);
         commandResult = command.execute(model);
 
         try {
-            storage.saveAddressBook(model.getAddressBook());
+            storage.savePositionBook(model.getPositionBook());
+            storage.saveApplicantBook(model.getApplicantBook());
         } catch (IOException ioe) {
             throw new CommandException(FILE_OPS_ERROR_MESSAGE + ioe, ioe);
         }
 
         return commandResult;
-    }
-
-    @Override
-    public ReadOnlyAddressBook getAddressBook() {
-        return model.getAddressBook();
-    }
-
-    @Override
-    public ObservableList<Person> getFilteredPersonList() {
-        return model.getFilteredPersonList();
     }
 
     @Override
@@ -76,10 +65,6 @@ public class LogicManager implements Logic {
         return model.getFilteredPositionList();
     }
 
-    @Override
-    public Path getAddressBookFilePath() {
-        return model.getAddressBookFilePath();
-    }
 
     @Override
     public Path getApplicantBookFilePath() {

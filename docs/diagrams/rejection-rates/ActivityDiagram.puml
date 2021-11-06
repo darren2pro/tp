@@ -1,0 +1,18 @@
+@startuml
+'https://plantuml.com/activity-diagram-beta
+
+start
+if () then ([else])
+  :Calculate rejection rate;
+  if () then ([else])
+    :Valid command;
+  else ([No current applicants])
+    :Invalid rate;
+    endif
+else ([no such position exists])
+    :CommandException;
+endif
+
+stop
+
+@enduml
