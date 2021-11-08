@@ -29,7 +29,7 @@ public class TypicalPositions {
     private TypicalPositions() {} // prevents instantiation
 
     /**
-     * Returns an {@code AddressBook} with all the typical persons.
+     * Returns an {@code PositionBook} with all the typical positions.
      */
     public static PositionBook getTypicalPositionBook() {
         PositionBook pb = new PositionBook();

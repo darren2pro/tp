@@ -13,10 +13,10 @@ box Model MODEL_COLOR_T1
 participant ":Model" as Model MODEL_COLOR
 end box
 
-[-> LogicManager : execute("delete-position 1")
+[-> LogicManager : execute()
 activate LogicManager
 
-LogicManager -> MrTechRecruiterParser : parseCommand("delete-position 1")
+LogicManager -> MrTechRecruiterParser : parseCommand()
 activate MrTechRecruiterParser
 
 create DeletePositionCommandParser
@@ -50,17 +50,17 @@ activate DeletePositionCommand
 
 DeletePositionCommand -> Model : getPositionToDelete(1)
 activate Model
-Model --> DeletePositionCommand : positionToDelete
+Model --> DeletePositionCommand : position
 deactivate Model
 
-DeletePositionCommand -> Model : deletePosition(positionToDelete)
+DeletePositionCommand -> Model : deletePosition()
 activate Model
-Model -> Model : removePosition(positionToDelete)
+Model -> Model : removePosition()
 activate Model
 Model --> Model
 deactivate Model
 
-Model -> Model : removeApplicantsUnderPosition(positionToDelete)
+Model -> Model : removeApplicantsUnderPosition()
 activate Model
 Model --> Model
 deactivate Model

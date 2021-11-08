@@ -77,8 +77,7 @@ public class ModelManager implements Model {
     }
 
     /**
-     * Old constructor - left temporarily to pass unit tests.
-     * Initializes a ModelManager with the given addressBook and userPrefs.
+     * Initializes a ModelManager with the given userPrefs.
      */
     public ModelManager(ReadOnlyUserPrefs userPrefs) {
         super();
@@ -96,7 +95,6 @@ public class ModelManager implements Model {
     }
 
     /**
-     * Left temporarily to pass unit tests.
      * Initializes a ModelManager with the given positionBook and userPrefs.
      */
     public ModelManager(ReadOnlyPositionBook positionBook, ReadOnlyUserPrefs userPrefs) {
@@ -115,7 +113,7 @@ public class ModelManager implements Model {
     }
 
     /**
-     * Old constructor - left temporarily to pass unit tests.
+     * Initializes a ModelManager with the given positionBook, applicantBook and userPrefs.
      */
     public ModelManager(ReadOnlyPositionBook positionBook, ReadOnlyApplicantBook applicantBook,
                         ReadOnlyUserPrefs userPrefs) {

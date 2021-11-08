@@ -66,7 +66,7 @@ public class TypicalApplicants {
     private TypicalApplicants() {} // prevents instantiation
 
     /**
-     * Returns an {@code AddressBook} with all the typical persons.
+     * Returns an {@code ApplicantBook} with all the typical applicants.
      */
     public static ApplicantBook getTypicalApplicantBook() {
         ApplicantBook ab = new ApplicantBook();

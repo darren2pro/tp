@@ -27,7 +27,7 @@ public class AddApplicantCommandIntegrationTest {
     }
 
     @Test
-    public void constructor_nullPerson_throwsNullPointerException() {
+    public void constructor_nullPosition_throwsNullPointerException() {
         assertThrows(NullPointerException.class, () -> new AddPositionCommand(null));
     }
 

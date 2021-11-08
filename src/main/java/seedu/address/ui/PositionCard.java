@@ -33,7 +33,7 @@ public class PositionCard extends UiPart<Region> {
     private Label description;
 
     /**
-     * Creates a {@code PersonCode} with the given {@code Person} and index to display.
+     * Creates a {@code PositionCard} with the given {@code Position} and index to display.
      */
     public PositionCard(Position position, int displayedIndex) {
         super(FXML);

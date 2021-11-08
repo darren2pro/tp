@@ -110,7 +110,7 @@ public class EditPositionCommandTest {
     public void execute_duplicatePositionFilteredList_failure() {
         showPositionAtIndex(model, INDEX_FIRST_POSITION);
 
-        // edit person in filtered list into a duplicate in address book
+        // edit position in filtered list into a duplicate in position book
         Position positionInList = model.getPositionBook().getPositionList().get(INDEX_SECOND_POSITION.getZeroBased());
         EditPositionCommand editPositionCommand = new EditPositionCommand(INDEX_FIRST_POSITION,
                 new EditPositionDescriptorBuilder(positionInList).build());

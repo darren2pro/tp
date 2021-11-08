@@ -43,7 +43,7 @@ You can reach us at the email `e0518538@u.nus.edu`
 
 <img src="images/harry-gao-h.png" width="200px">
 
-[[github](http://github.com/harry-gao-h) [[portfolio](team/harry-gao-h.md)]]
+[[github](http://github.com/harry-gao-h)] [[portfolio](team/harry-gao-h.md)]
 
 * Role: Developer
 * Responsibilities: Code quality, Scheduling & Tracking

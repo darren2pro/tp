@@ -48,22 +48,4 @@ public class StorageManagerTest {
         UserPrefs retrieved = storageManager.readUserPrefs().get();
         assertEquals(original, retrieved);
     }
-
-    // the test needs update.
-
-    /*
-    @Test
-    public void addressBookReadSave() throws Exception {
-        AddressBook original = getTypicalAddressBook();
-        storageManager.saveAddressBook(original);
-        ReadOnlyAddressBook retrieved = storageManager.readAddressBook().get();
-        assertEquals(original, new AddressBook(retrieved));
-    }
-
-    @Test
-    public void getAddressBookFilePath() {
-        assertNotNull(storageManager.getAddressBookFilePath());
-    }
-    */
-
 }
