@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Scene?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.stage.Stage?>
+
+<fx:root minHeight="690" minWidth="900" onCloseRequest="#handleExit" title="MrTechRecruiter" type="javafx.stage.Stage" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1">
+  <icons>
+    <Image url="@/images/address_book_32.png" />
+  </icons>
+  <scene>
+    <Scene>
+      <stylesheets>
+        <URL value="@Fonts.css" />
+        <URL value="@DarkTheme.css" />
+        <URL value="@Extensions.css" />
+      </stylesheets>
+
+      <VBox prefHeight="630.0" prefWidth="650.0" styleClass="pane-with-border">
+            <HBox prefHeight="18.0" prefWidth="866.0" style="-fx-background-color: #5BC8AF;">
+               <children>
+                  <ImageView fitHeight="32.0" fitWidth="38.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../images/MrTechRecruiter.png" />
+                     </image>
+                  </ImageView>
+              <MenuBar fx:id="menuBar" minHeight="-Infinity" minWidth="-Infinity" prefHeight="32.0" prefWidth="102.0">
+                <Menu mnemonicParsing="false" text="File">
+                  <MenuItem mnemonicParsing="false" onAction="#handleExit" text="Exit" />
+                </Menu>
+                <Menu mnemonicParsing="false" text="Help">
+                  <MenuItem fx:id="helpMenuItem" mnemonicParsing="false" onAction="#handleHelp" text="Help" />
+                </Menu>
+              </MenuBar>
+               </children>
+            </HBox>
+            <HBox prefHeight="100.0" prefWidth="200.0" styleClass="pane-with-border">
+               <children>
+                  <VBox prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
+                     <children>
+                        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+                           <children>
+                              <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="40.0" prefWidth="92.0" style="-fx-background-color: 000000;" text="Applicants" textAlignment="CENTER" HBox.hgrow="ALWAYS">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                              </Label>
+                              <ImageView fitHeight="40.0" fitWidth="172.0" mouseTransparent="true" pickOnBounds="true" HBox.hgrow="ALWAYS">
+                                 <image>
+                                    <Image url="@../images/Applicant.png" />
+                                 </image>
+                              </ImageView>
+                           </children>
+                        </HBox>
+
+                          <VBox fx:id="applicantList" prefHeight="358.0" prefWidth="422.0" styleClass="pane-with-border" VBox.vgrow="ALWAYS">
+                      <padding>
+                        <Insets bottom="10" left="10" right="10" top="10" />
+                      </padding>
+                           <children>
+                         <StackPane fx:id="applicantListPanelPlaceholder" alignment="TOP_LEFT" minHeight="-Infinity" minWidth="-Infinity" prefHeight="359.0" prefWidth="400.0" VBox.vgrow="ALWAYS" />
+                           </children>
+                    </VBox>
+                     </children>
+                  </VBox>
+                  <VBox alignment="TOP_RIGHT" prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
+                     <children>
+                        <HBox alignment="CENTER" nodeOrientation="LEFT_TO_RIGHT" prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+                           <children>
+                              <Label alignment="CENTER" prefHeight="40.0" prefWidth="79.0" text="Positions" textAlignment="CENTER" textFill="WHITE" HBox.hgrow="ALWAYS" />
+                         <ImageView fitHeight="38.0" fitWidth="45.0" pickOnBounds="true" preserveRatio="true" HBox.hgrow="ALWAYS">
+                           <image>
+                             <Image url="@../images/Position.png" />
+                           </image>
+                         </ImageView>
+                           </children>
+                        </HBox>
+
+                    <VBox fx:id="positionList" alignment="CENTER" prefHeight="382.0" prefWidth="438.0" styleClass="pane-with-border">
+                      <padding>
+                        <Insets bottom="10" left="10" right="10" top="10" />
+                      </padding>
+                      <StackPane fx:id="positionListPanelPlaceholder" alignment="TOP_RIGHT" minHeight="-Infinity" minWidth="-Infinity" nodeOrientation="LEFT_TO_RIGHT" prefHeight="359.0" prefWidth="420.0" VBox.vgrow="ALWAYS" />
+                    </VBox>
+                     </children>
+                  </VBox>
+               </children>
+            </HBox>
+
+              <StackPane fx:id="commandBoxPlaceholder" prefHeight="66.0" prefWidth="799.0" styleClass="pane-with-border">
+          <padding>
+            <Insets bottom="5" left="10" right="10" top="5" />
+          </padding>
+        </StackPane>
+
+              <StackPane fx:id="resultDisplayPlaceholder" prefHeight="110.0" prefWidth="799.0" styleClass="pane-with-border" VBox.vgrow="ALWAYS">
+          <padding>
+            <Insets bottom="5" left="10" right="10" top="5" />
+          </padding>
+        </StackPane>
+
+        <StackPane fx:id="statusbarPlaceholder" minHeight="-Infinity" minWidth="-Infinity" styleClass="pane-with-border" />
+      </VBox>
+    </Scene>
+  </scene>
+</fx:root>
